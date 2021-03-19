@@ -12,13 +12,13 @@ suspend inline fun <T> CoroutineScope.newAsync(crossinline action: suspend () ->
     }
 }
 
-suspend fun <T> Deferred<T>.tryAwait(): T? {
-    return try {
-        await()
-    } catch (e: Throwable) {
-        null
-    }
-}
+//suspend fun <T> Deferred<T>.tryAwait(): T? {
+//    return try {
+//        await()
+//    } catch (e: Throwable) {
+//        null
+//    }
+//}
 
 suspend inline fun <T> Deferred<T>.tryAwaitReturn(crossinline action: Throwable.() -> T): T {
     return try {
