@@ -2,7 +2,15 @@
 ### 开发常用的拓展函数，加入协程拓展，可实现协程异步同步快速开发（该思想来自 [Rxhttp](https://github.com/liujingxing/okhttp-RxHttp) 一个非常好的网络请求框架）
 
 ## JCenter
-
+Add it in your root build.gradle at the end of repositories:
+```
+	allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+                        }
+	}
+```
 androidx
 
 ```
@@ -11,11 +19,25 @@ implementation 'com.github.Alexxiaopang:KotlinKtx:1.0.2'
 
 
 
-#### 先说协程
+## 先说协程
 
 ##### 我们经常使用协程的时候，需要同步或者异步操作，还要判断错误或者返回不同的数值，这需要使用该框架可以直接使用，可对数组等进行操作,下面是例子，可自行食用（注意，建议使用rxLifeScope.launch运行携程块，可在fragment\activity\viewmodel 销毁时候自动注销，如果不是ac等，可以使用RxLifeScope.launch返回JOB，JOB.cacel()）
 
 ```kotlin
+      //不监听
+        rxLifeScope.launch{
+        //同步 
+        val test1= Ktx.run {
+                arrayListOf("444", "5555")
+         }.startDelay(1300).sort()
+        
+        //异步
+          val test2 = Ktx.run {
+                5 / 0
+            }.delay(1500).async(this)//可延时，
+        
+        }
+       //监听错误
         rxLifeScope.launch({
             val test1 = Ktx.run {
                 arrayListOf("444", "5555")
