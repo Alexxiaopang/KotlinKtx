@@ -6,7 +6,7 @@
 androidx
 
 ```
-implementation 'com.ayvytr:ktx-androidx:3.0.0'
+implementation 'com.github.Alexxiaopang:KotlinKtx:1.0.2'
 ```
 
 
