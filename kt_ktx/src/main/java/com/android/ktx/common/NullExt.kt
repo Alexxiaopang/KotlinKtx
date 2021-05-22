@@ -23,7 +23,7 @@ inline fun <reified T> T?.isNull(): Boolean {
     return when (this) {
         null -> true
         is List<*> -> this.isEmpty()
-        else -> true
+        else -> false
     }
 }
 /**
