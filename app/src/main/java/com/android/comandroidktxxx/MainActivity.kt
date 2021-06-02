@@ -8,14 +8,36 @@ import com.android.ktx.common.isNull
 import com.android.ktx.coroutinescope.*
 import com.android.ktx.spanner.Spanner
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        rxLifeScope.launch {
+
+            Ktx.runIo {
+
+                withContext(Dispatchers.Main) {
+                }
+                Log.e("线程", "onCreate: ${Thread.currentThread().name} ")
+
+            }.await()
+            Ktx.run {
+
+                Log.e("线程2", "onCreate: ${Thread.currentThread().name} ")
+
+            }.await()
+
+            Ktx.runMain {
+
+                Log.e("线程3", "onCreate: ${Thread.currentThread().name} ")
+
+            }.await()
+
+        }
+
         rxLifeScope.launch({
             val test1 = Ktx.run {
                 4 / 0
@@ -37,21 +59,21 @@ class MainActivity : AppCompatActivity() {
         val testList1 = arrayListOf<Int>()
         val testList2 = arrayListOf<Int>(1, 2, 3)
 
-        val testString:String?=null
+        val testString: String? = null
 
         testList1.isNull({
             Log.e("testList1", "不空")
-        }){
+        }) {
             Log.e("testList1", "空")
         }
         testList2.isNull({
             Log.e("testList2", "不空")
-        }){
+        }) {
             Log.e("testList2", "空")
         }
         testString.isNull({
             Log.e("testString", "不空")
-        }){
+        }) {
             Log.e("testString", "空")
         }
 
