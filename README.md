@@ -14,8 +14,14 @@ Add it in your root build.gradle at the end of repositories:
 androidx
 
 ```
-implementation 'com.github.Alexxiaopang:KotlinKtx:1.0.2'
+implementation 'com.github.Alexxiaopang:KotlinKtx:1.0.5'
 ```
+
+
+## 1.05版本修改
+#### Ktx.run默认使用IO线程
+#### 新增 Ktx.runMain主线程运行
+#### Ktx.runDefault默认现在运行
 
 
 
