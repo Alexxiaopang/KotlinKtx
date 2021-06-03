@@ -18,6 +18,13 @@ implementation 'com.github.Alexxiaopang:KotlinKtx:1.0.5'
 ```
 
 
+## 1.06版本修改
+#### 去除Ktx.run默认使用IO线程，对前面项目影响太大，加入方法变量，可切换线程  Ktx.run(Dispatchers.IO)
+//下面维持不变
+#### Ktx.runMain主线程运行
+#### Ktx.runDefault默认现在运行
+
+
 ## 1.05版本修改
 #### Ktx.run默认使用IO线程
 #### 新增 Ktx.runMain主线程运行
