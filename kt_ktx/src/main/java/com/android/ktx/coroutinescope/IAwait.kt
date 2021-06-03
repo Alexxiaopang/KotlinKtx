@@ -1,7 +1,6 @@
 package com.android.ktx.coroutinescope
 
 
-
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -385,3 +384,5 @@ private inline fun <T> tryAwait(block: () -> T): T? {
         null
     }
 }
+
+

@@ -5,14 +5,15 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withContext
 import java.io.IOException
+import kotlin.coroutines.CoroutineContext
 
 object Ktx {
     //默认是在Io线程运行
-    fun <T> run(action: suspend () -> T): IAwait<T> {
+    fun <T> run(context: CoroutineContext = Dispatchers.Main, action: suspend () -> T): IAwait<T> {
         return try {
             object : IAwait<T> {
                 override suspend fun await(): T {
-                    return withContext(Dispatchers.IO) { action.invoke() }
+                    return withContext(context) { action.invoke() }
                 }
             }
         } catch (t: Throwable) {

@@ -17,24 +17,27 @@ class MainActivity : AppCompatActivity() {
 
         rxLifeScope.launch {
 
-            Ktx.runIo {
-
-                withContext(Dispatchers.Main) {
-                }
-                Log.e("线程", "onCreate: ${Thread.currentThread().name} ")
-
-            }.await()
             Ktx.run {
 
-                Log.e("线程2", "onCreate: ${Thread.currentThread().name} ")
+                Log.e("线程默认", "onCreate: ${Thread.currentThread().name} ")
 
-            }.await()
+            }.async(this).await()
+            Ktx.run(Dispatchers.IO) {
 
-            Ktx.runMain {
+                Log.e("线程构造函数", "onCreate: ${Thread.currentThread().name} ")
 
-                Log.e("线程3", "onCreate: ${Thread.currentThread().name} ")
-
-            }.await()
+            }.async(this).await()
+//            Ktx.run {
+//
+//                Log.e("线程2", "onCreate: ${Thread.currentThread().name} ")
+//
+//            }.await()
+//
+//            Ktx.runMain {
+//
+//                Log.e("线程3", "onCreate: ${Thread.currentThread().name} ")
+//
+//            }.await()
 
         }
 
