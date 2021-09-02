@@ -386,3 +386,83 @@ private inline fun <T> tryAwait(block: () -> T): T? {
 }
 
 
+
+/**
+ * @param times
+ * @param period
+ * @param stop
+ */
+fun <T> IAwait<T>.repeat(
+    times: Long = Long.MAX_VALUE,
+    period: Long = 0,
+    stop: suspend (T) -> Boolean = { false }
+): IAwait<T> = object : IAwait<T> {
+    var remaining = if (times == Long.MAX_VALUE) Long.MAX_VALUE else times - 1
+    override suspend fun await(): T {
+        while (remaining > 0) {
+            if (remaining != Long.MAX_VALUE) {
+                remaining--
+            }
+            val t = this@repeat.await()
+            if (stop(t)) {
+                return t
+            }
+            kotlinx.coroutines.delay(period)
+        }
+        return this@repeat.await()
+    }
+}
+
+/**
+ * @param times
+ * @param period
+ * @param stop
+ */
+fun <T> IAwait<T>.tryRepeat(
+    times: Long = Long.MAX_VALUE,
+    period: Long = 0,
+    stop: suspend (T?) -> Boolean = { false }
+): IAwait<T> = object : IAwait<T> {
+    var remaining = if (times == Long.MAX_VALUE) Long.MAX_VALUE else times - 1
+    override suspend fun await(): T {
+        while (remaining > 0) {
+            if (remaining != Long.MAX_VALUE) {
+                remaining--
+            }
+            val t = try {
+                this@tryRepeat.await()
+            } catch (e: Throwable) {
+                null
+            }
+            if (stop(t)) {
+                return t!!
+            }
+            kotlinx.coroutines.delay(period)
+        }
+        return this@tryRepeat.await()
+    }
+}
+
+/**
+ * @param times
+ * @param period
+ * @param stop
+ */
+suspend fun <T> IAwait<T>.tryRepeatT(
+    times: Long = Long.MAX_VALUE,
+    period: Long = 0,
+    stop: suspend (T?) -> Boolean = { false }
+): T? {
+    var remaining = if (times == Long.MAX_VALUE) Long.MAX_VALUE else times - 1
+    while (remaining > 0) {
+        if (remaining != Long.MAX_VALUE) {
+            remaining--
+        }
+        val t = this@tryRepeatT.tryAwait()
+        if (stop(t)) {
+            return t
+        }
+        kotlinx.coroutines.delay(period)
+    }
+    return this@tryRepeatT.tryAwait()
+}

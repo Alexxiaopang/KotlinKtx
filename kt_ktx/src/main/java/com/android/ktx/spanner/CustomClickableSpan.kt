@@ -5,19 +5,36 @@ import android.text.style.ClickableSpan
 import android.view.View
 
 
-internal class CustomClickableSpan private constructor(private val text: CharSequence,
-                                                       private val tag: Any? = null,
-                                                       private val range: Range) : ClickableSpan() {
+internal class CustomClickableSpan private constructor(
+    private val text: CharSequence,
+    private val tag: Any? = null,
+    private val range: Range
+) : ClickableSpan() {
     var onTextClickListener: OnTextClickListener? = null
     var onTextLongClickListener: OnTextLongClickListener? = null
 
-    constructor(text: CharSequence, tag: Any?, range: Range,
-                onTextClickListener: OnTextClickListener) : this(text, tag, range) {
+    var dsAction: (TextPaint) -> Unit = {}
+
+    constructor(
+        text: CharSequence, tag: Any?, range: Range,
+        onTextClickListener: OnTextClickListener
+    ) : this(text, tag, range) {
         this.onTextClickListener = onTextClickListener
     }
 
-    constructor(text: CharSequence, tag: Any?, range: Range,
-                onTextLongClickListener: OnTextLongClickListener) : this(text, tag, range) {
+    constructor(
+        text: CharSequence, tag: Any?, range: Range,
+        onTextClickListener: OnTextClickListener, dsAction: (TextPaint) -> Unit
+    ) : this(text, tag, range) {
+        this.onTextClickListener = onTextClickListener
+        this.dsAction = dsAction
+    }
+
+
+    constructor(
+        text: CharSequence, tag: Any?, range: Range,
+        onTextLongClickListener: OnTextLongClickListener
+    ) : this(text, tag, range) {
         this.onTextLongClickListener = onTextLongClickListener
     }
 
@@ -27,11 +44,15 @@ internal class CustomClickableSpan private constructor(private val text: CharSeq
         }
     }
 
-    override fun updateDrawState(ds: TextPaint) {}
+    override fun updateDrawState(ds: TextPaint) {
+        dsAction.invoke(ds)
+    }
 
     fun onLongClick(view: View) {
         if (onTextLongClickListener != null) {
-            handleClickEvent(view, Runnable { onTextLongClickListener!!.onLongClicked(text, range, tag) })
+            handleClickEvent(
+                view,
+                Runnable { onTextLongClickListener!!.onLongClicked(text, range, tag) })
         }
     }
 

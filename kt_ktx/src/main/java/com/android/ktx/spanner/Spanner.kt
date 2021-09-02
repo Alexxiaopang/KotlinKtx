@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.text.SpannableString
 import android.text.Spanned
+import android.text.TextPaint
 import android.text.TextUtils
 import android.text.style.*
 import android.widget.TextView
@@ -177,31 +178,42 @@ class Spanner private constructor(private val context: Context, text: CharSequen
      * 设置选中字体背景色.注意：需要同时设置 [.textColor]
      */
     @JvmOverloads
-    fun backgroundColor(@ColorInt color: Int, @ColorInt pressedBackgroundColor: Int = color,
-                                radiusDp: Int = 0): Spanner {
+    fun backgroundColor(
+        @ColorInt color: Int, @ColorInt pressedBackgroundColor: Int = color,
+        radiusDp: Int = 0
+    ): Spanner {
         this.pressedBackgroundColor = pressedBackgroundColor
         this.pressedBackgroundRadius = SpannerUtils.dp2px(context, radiusDp)
 
         val radiusPx = SpannerUtils.dp2px(context, radiusDp)
         for (range in rangeList) {
-            setSpan(RoundedBackgroundSpan(textColor, color, radiusPx), range.from, range.to,
-                    SPAN_MODE)
+            setSpan(
+                RoundedBackgroundSpan(textColor, color, radiusPx), range.from, range.to,
+                SPAN_MODE
+            )
         }
         return this
     }
 
     @JvmOverloads
-    fun backgroundColorRes(@ColorRes colorRes: Int, @ColorRes pressedBackgroundColorRes: Int = colorRes,
-                           radiusDp: Int = 0): Spanner {
+    fun backgroundColorRes(
+        @ColorRes colorRes: Int, @ColorRes pressedBackgroundColorRes: Int = colorRes,
+        radiusDp: Int = 0
+    ): Spanner {
         val color = ContextCompat.getColor(context, colorRes)
         val pressedBackgroundColor = ContextCompat.getColor(context, pressedBackgroundColorRes)
         return backgroundColor(color, pressedBackgroundColor, radiusDp)
     }
 
     @JvmOverloads
-    fun textColorRes(@ColorRes colorRes: Int, @ColorRes pressedTextColorRes: Int = colorRes): Spanner {
-        return textColor(ContextCompat.getColor(context, colorRes),
-                         ContextCompat.getColor(context, pressedTextColorRes))
+    fun textColorRes(
+        @ColorRes colorRes: Int,
+        @ColorRes pressedTextColorRes: Int = colorRes
+    ): Spanner {
+        return textColor(
+            ContextCompat.getColor(context, colorRes),
+            ContextCompat.getColor(context, pressedTextColorRes)
+        )
     }
 
     @JvmOverloads
@@ -266,28 +278,52 @@ class Spanner private constructor(private val context: Context, text: CharSequen
         return this
     }
 
-    fun onClick(textView: TextView,
-                onTextClickListener: OnTextClickListener): Spanner {
+    fun onClick(
+        textView: TextView,
+        onTextClickListener: OnTextClickListener
+    ): Spanner {
         for (range in rangeList) {
             val span = CustomClickableSpan(
                 subSequence(range.from, range.to),
                 tagsMap[range],
                 range,
-                onTextClickListener)
+                onTextClickListener
+            )
             setSpan(span, range.from, range.to, SPAN_MODE)
         }
         linkify(textView)
         return this
     }
 
-    fun onLongClick(textView: TextView,
-                    onTextLongClickListener: OnTextLongClickListener): Spanner {
+    fun onClick(
+        textView: TextView,
+        onTextClickListener: OnTextClickListener, dsAction: (TextPaint) -> Unit
+    ): Spanner {
         for (range in rangeList) {
             val span = CustomClickableSpan(
                 subSequence(range.from, range.to),
                 tagsMap[range],
                 range,
-                onTextLongClickListener)
+                onTextClickListener, dsAction
+            )
+            setSpan(span, range.from, range.to, SPAN_MODE)
+        }
+        linkify(textView)
+        return this
+    }
+
+
+    fun onLongClick(
+        textView: TextView,
+        onTextLongClickListener: OnTextLongClickListener
+    ): Spanner {
+        for (range in rangeList) {
+            val span = CustomClickableSpan(
+                subSequence(range.from, range.to),
+                tagsMap[range],
+                range,
+                onTextLongClickListener
+            )
             setSpan(span, range.from, range.to, SPAN_MODE)
         }
         linkify(textView)
@@ -316,8 +352,10 @@ class Spanner private constructor(private val context: Context, text: CharSequen
 
     private fun linkify(textView: TextView) {
         textView.highlightColor = Color.TRANSPARENT
-        textView.movementMethod = LinkTouchMovementMethod(pressedTextColor, pressedBackgroundColor,
-                                                          pressedBackgroundRadius)
+        textView.movementMethod = LinkTouchMovementMethod(
+            pressedTextColor, pressedBackgroundColor,
+            pressedBackgroundRadius
+        )
     }
 
     companion object {
