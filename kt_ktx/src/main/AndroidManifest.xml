@@ -3,12 +3,12 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <application>
-        <provider
-            android:name=".provider.ContextProvider"
-            android:authorities="${applicationId}.ktx.ctp"
-            android:enabled="true"
-            android:exported="false" />
-    </application>
+<!--    <application>-->
+<!--        <provider-->
+<!--            android:name=".provider.ContextProvider"-->
+<!--            android:authorities="${applicationId}.ktx.ctp"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false" />-->
+<!--    </application>-->
 
 </manifest>
