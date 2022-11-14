@@ -10,8 +10,8 @@ android {
         applicationId "com.android.comandroidktxxx"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 1
-        versionName "2.0"
+        versionCode 2
+        versionName "2.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
